@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Build Container
-          command: docker build -t spreetail
+          command: docker build -t spreetail .
       - deploy:
           name: Push Docker  image
           command: |
