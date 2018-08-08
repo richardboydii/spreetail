@@ -6,8 +6,23 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Greeting
-          command: docker build .
-      - run:
-          name: Print the Current Time
-          command: date
+          name: Build Container
+          command: docker build -t spreetail
+      - deploy:
+          name: Push Docker  image
+          command: |
+            login="$(aws ecr get-login)"
+            ${login}
+            docker tag spreetail "${ECR_ENDPOINT}/spreetail:${CIRCLE_SHA1}"
+            docker push "${ECR_ENDPOINT}/spreetail:${CIRCLE_SHA1}"
+            DATE=$(date +%Y%m%d%H%M)
+            if [ "${CIRCLE_BRANCH}" == "dev" ]; then
+              docker tag spreetail "${ECR_ENDPOINT}/spreetail:dev${DATE}"
+              docker push "${ECR_ENDPOINT}/spreetail:dev${DATE}"
+              deploy-dev.sh
+            fi
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker tag spreetail "${ECR_ENDPOINT}/spreetail:latest"
+              docker push "${ECR_ENDPOINT}/spreetail"
+              deploy-prod.sh
+            fi
