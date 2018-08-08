@@ -11,7 +11,7 @@ jobs:
       - deploy:
           name: Push Docker  image
           command: |
-            login="$(aws ecr get-login)"
+            login="$(aws ecr get-login --region us-east-1)"
             ${login}
             docker tag spreetail "${ECR_ENDPOINT}/spreetail:${CIRCLE_SHA1}"
             docker push "${ECR_ENDPOINT}/spreetail:${CIRCLE_SHA1}"
