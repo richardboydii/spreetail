@@ -18,10 +18,10 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "dev" ]; then
               docker tag spreetail "${ECR_ENDPOINT}/spreetail:dev${DATE}"
               docker push "${ECR_ENDPOINT}/spreetail:dev${DATE}"
-              deploy-dev.sh
+              ./deploy-dev.sh
             fi
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker tag spreetail "${ECR_ENDPOINT}/spreetail:latest"
               docker push "${ECR_ENDPOINT}/spreetail"
-              deploy-prod.sh
+              ./deploy-prod.sh
             fi
